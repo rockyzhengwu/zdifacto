@@ -52,40 +52,4 @@ int main(int argc, char *argv[]){
     WarnUnknownKWArgs(param, predicter->Init(kwargs_remain));
     predicter->Run();
   }
-  // Reader* batch_reader  = new BatchReader(
-  //   "/home/zhengwu/workspace/private-github/zdifacto/tests/cpp/data",
-  //   "libsvm",
-  //   0,
-  //   1,
-  //   10,
-  //   10
-  // );
-  // std::cout << "batch reader \n";
-  // feaid_t b = 0;
-  // while(batch_reader->Next()){
-  //   std::cout << "batch : " << b << "\n";
-  //   std::cout << "hello \n";
-  //   dmlc::RowBlock<feaid_t> batch = batch_reader->Value();
-  //   std::cout << batch.size << "\n";
-  //   ++b ;
-  // }
-
-  Reader* reader = new Reader("/home/zhengwu/workspace/private-github/zdifacto/data/gisette_scale.t",
-                        "libsvm",
-                        0,
-                        1,
-                        256*1024*1024);
-  while (reader->Next()){
-    dmlc::RowBlock<feaid_t> data=reader->Value();
-    std::cout << "data size " << data.size << "\n";
-    // for(size_t i=0; i<data.size; ++i){
-    //   dmlc::Row<feaid_t, real_t> row = data[i];
-    //   std::cout << *row.label << " " << row.length << "\n";
-    //   for(size_t s=0; s < row.length; ++s){
-    //     std::cout << row.get_index(s) << ":" << row.get_value(s) <<  " ";
-    //   }
-    //   std::cout << "\n";
-    // }
-    std::cout << data.size << "\n";
-  }
 }
