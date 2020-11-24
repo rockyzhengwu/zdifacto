@@ -8,6 +8,7 @@
 #include "sgd/sgd_learner.h"
 #include "zdifacto/predicter.h"
 #include "reader/reader.h"
+#include "dmlc/omp.h"
 
 namespace zdifacto {
 struct DifactoParam : public dmlc::Parameter<DifactoParam> {
@@ -38,6 +39,8 @@ int main(int argc, char *argv[]){
     LOG(ERROR) << "usage: difacto key1=val1 key2=val2 ...";
     return 0;
   }
+  // std::cout << omp_get_max_threads() << "\n";
+  // exit(0);
   ArgParser parser;
   for (int i = 1; i < argc; ++i) parser.AddArg(argv[i]);
   DifactoParam param;

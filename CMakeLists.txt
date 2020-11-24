@@ -1,22 +1,22 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.13)
 
 project(zdifacto VERSION 1.0)
 
-# include_directories(
-#   ${PROJECT_SOURCE_DIR}
-#   ${PROJECT_BINARY_DIR}
-#   ${PROJECT_SOURCE_DIR}/include
-#   ${PROJECT_SOURCE_DIR}/dmlc-core/include
-#   ${PROJECT_SOURCE_DIR}/ps-lite/include
-# )
+if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
+  message(FATAL_ERROR "GCC version must be at least 5.0!")
+endif()
 
-
-# CFLAGS = -std=c++11 -fopenmp -fPIC -O3 -ggdb -Wall -DDMLC_LOG_FATAL_THROW=0 $(ADD_CFLAGS)
 set(${CMAKE_CXX_FLAGS}, "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -fPIC -O3 -ggdb -Wall -DDMLC_LOG_FATAL_THROW=0 $(ADD_CFLAGS)")
 # find_package(OpenMP REQUIRED)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/dmlc-core)
 add_subdirectory(${PROJECT_SOURCE_DIR}/ps-lite)
+
+set_target_properties(dmlc PROPERTIES
+  CXX_STANDARD 14
+  CXX_STANDARD_REQUIRED ON
+  POSITION_INDEPENDENT_CODE ON
+)
 
 file(GLOB_RECURSE SOURCES 
    ${PROJECT_SOURCE_DIR}/src/updater*.h
@@ -45,11 +45,7 @@ message(${PROJECT_SOURCE_DIR})
 
 add_library(zdifacto "")
 
-target_include_directories(zdifacto
-  PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
+
 
 target_include_directories(zdifacto
   PRIVATE
@@ -59,17 +55,12 @@ target_include_directories(zdifacto
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/ps-lite/include
 )
-
 target_sources(zdifacto PRIVATE ${SOURCES})
 
 target_link_libraries(zdifacto PUBLIC dmlc)
 target_link_libraries(zdifacto PUBLIC pslite)
-# target_link_libraries(zdifacto PUBLIC OpenMP::OpenMP_CXX)
-
-# target_compile_options(zdifacto
-#   PRIVATE
-#   $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<COMPILE_LANGUAGE:CXX>>:/MP>
-#   $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<COMPILE_LANGUAGE:CXX>>:-funroll-loops>)
+find_package(OpenMP REQUIRED)
+target_link_libraries(zdifacto PUBLIC OpenMP::OpenMP_CXX)
 
 add_executable(zdifacto_train src/main.cc )
 

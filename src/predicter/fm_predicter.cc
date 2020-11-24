@@ -60,7 +60,7 @@ void FMPredicter::GetPos(const SArray<int>& len,
                         "libsvm",
                         0,
                         1,
-                        512*1024*1024);
+                        256*1024*1024);
     // std::cout << reader->Next() << " next\n";
 
     std::ofstream outfile;
@@ -69,7 +69,7 @@ void FMPredicter::GetPos(const SArray<int>& len,
       std::vector<real_t> preds;
       dmlc::RowBlock<feaid_t> blk = reader->Value();
       SArray<real_t> pred(blk.size);
-      std::cout << blk.size << " data size \n";
+      // std::cout << blk.size << " data size \n";
       SArray<int> w_pos, V_pos;
       auto data = new dmlc::data::RowBlockContainer<unsigned>();
       auto feaids = std::make_shared<std::vector<feaid_t>>();
